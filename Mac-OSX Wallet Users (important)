@@ -1,0 +1,40 @@
+MN SETUP INSTRUCTIONS FOR MAC/OSX WALLET USERS
+----------------------------------------------
+
+If you are running OSX on your desktop and plan on using the Mac version of the Trittium wallet, you MUST be sure that you install v2.1.0 on your masternode rather than the latest version, which is v2.1.1. This is due to the fact that the most recent release of the OSX wallet is 2.1.0, while as the most recent release of the MN daemon is v2.1.1. Having different versions of MN daemon and wallet will cause syncing issues and you will NOT receive coin distributions. 
+
+I have edited the automated script with the changes needed for the downgraded version of the MN daemon and have requested for it to be uploaded here onto Github, however until it is approved here are the temporary instructions on how to get your MN working after you've already installed the Trittium daemon using the latest script:
+
+# run each command line below from ROOT user using Putty/SSH (not tritt)!!!
+cd ~
+killall trittiumd
+rm /usr/local/bin/trittium*
+wget https://github.com/Trittium/trittium/releases/download/2.1.0/Trittium-2.1.0-Ubuntu-daemon.tgz
+tar -xvf Trittium-2.1.0-Ubuntu-daemon.tgz -C /usr/local/bin/
+rm Trittium-2.1.0-Ubuntu-daemon.tgz
+su tritt
+trittiumd -daemon -reindex 
+watch trittium-cli getblockcount
+
+Once you see that the daemon is receiving new block data, you can use CTRL+Z to exit and go back to the command prompt. After you've downgraded your MN, you'll need to open your desktop Trittium wallet for OSX, let it re-sync, and then click "start alias" under the "Masternodes" tab. The MN you selected should now show the status as "ENABLED" rather than "MISSING".
+
+Lastly, to verify that your MN is working properly, go back to SSH for your node and run:
+
+trittium-cli masternode status
+
+Once you've ran the command above, you should see details about your MN, and at the end you should see the following:
+
+"status" : 4,
+"message" : "Masternode successfully started"
+
+If you see this message, Congratulations - You've successfully set up your MN with your OSX wallet! 
+
+Additional Notes
+----------------
+
+1) Note, that if killall doesn't work for you, the alternative is using "pkill trittiumd". This will pertain to Ubuntu VPS nodes as well as possibly other distros of UNIX.
+2) Much thanks to @Gadget#9349 on the TRTT Discord channel for providing the instructions on how to downgrade the daemon :)
+
+---
+
+Composed by: digitaldash
